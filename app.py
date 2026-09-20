@@ -398,10 +398,10 @@ st.markdown("---")
 st.markdown("## 🆚 Was UMAP gegenüber t-SNE ändert - gemessen")
 st.markdown(
     """
-| Versprechen gegenüber t-SNE | Ergebnis im Test (300 Touren; Out-of-sample über 6 feste Seeds, sonst Seed 7) |
+| Versprechen gegenüber t-SNE | Ergebnis im Test (300 Touren; Out-of-sample und Stabilität über feste Seeds, sonst Seed 7) |
 |---|---|
 | **Neue Touren einbetten** | ✅ `transform`: R² 0.88–0.93 gegen 0.69–0.85 bei der t-SNE-Näherung; beim Neu-Rechnen verschieben sich die Trainings-Touren nur um Procrustes 0.03–0.15 |
-| **Stabilität** (Start egal) | ✅ zufällige Starts weichen um Procrustes 0.00–0.26 ab (t-SNE bei q = 3: 0.46–0.81) |
+| **Stabilität** (Start egal) | ✅ bei q = 3: zufällige Starts weichen im Median um Procrustes 0.02–0.17 voneinander ab, bei t-SNE um 0.56–0.76 (4 Datensätze). Bei q = 2 gemischt (UMAP 0.02–0.32, t-SNE 0.24–0.41), einzelne UMAP-Starts weichen stark ab |
 | **Geschwindigkeit** | ✅ bei großem n (n = 600: 1.3 s gegen 4.9 s); bei n = 100-200 ist t-SNE schneller, der Wechsel liegt zwischen 200 und 400 Touren |
 | **Globale Struktur** | ❌ Abstandstreue ferner Paare 0.56 gegen 0.69 (t-SNE) - nicht besser |
 | **Sonderfahrten / Extreme** | ❌ 5 %: R² 0.14 gegen 0.12 (t-SNE), PCA 0.76 - dieselbe Schwäche |

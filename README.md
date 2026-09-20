@@ -14,10 +14,10 @@ pca-demo → isomap-demo | lle-demo | tsne-demo → umap-demo    (Konvergenz: Na
 umap-demo → PaCMAP | Autoencoder   (weitere Stücke, noch nicht gebaut)
 ```
 
-| Versprechen gegenüber t-SNE | Ergebnis (300 Touren; Out-of-sample über 6 feste Seeds, sonst Seed 7) |
+| Versprechen gegenüber t-SNE | Ergebnis (300 Touren; Out-of-sample und Stabilität über feste Seeds, sonst Seed 7) |
 |---|---|
 | Neue Touren einbetten | ✅ `transform`: R² 0.88–0.93 gegen 0.69–0.85 bei der t-SNE-Näherung; Trainings-Touren verschieben sich beim Neu-Rechnen nur um Procrustes 0.03–0.15 |
-| Stabilität (Start egal) | ✅ zufällige Starts weichen um Procrustes 0.00–0.26 ab (t-SNE bei q = 3: 0.46–0.81) |
+| Stabilität (Start egal) | ✅ bei q = 3 (mittlere paarweise Abweichung zufälliger Starts, 4 feste Seeds): UMAP 0.02–0.17, t-SNE 0.56–0.76. Bei q = 2 gemischt: UMAP 0.02–0.32, t-SNE 0.24–0.41; einzelne UMAP-Starts weichen stark ab |
 | Geschwindigkeit | ✅ bei großem n (n = 600: 1.3 s gegen 4.9 s); bei n = 100–200 ist t-SNE schneller |
 | Globale Struktur | ❌ Abstandstreue ferner Paare 0.56 gegen 0.69 (t-SNE) – nicht besser |
 | Sonderfahrten / Extreme | ❌ 5 %: R² 0.14 gegen 0.12 (t-SNE), PCA 0.76 – dieselbe Schwäche |
@@ -49,8 +49,10 @@ Messwerte (Seed 7, 300 Touren, q = 2, n_neighbors 15, min_dist 0.1, 500 Epochen,
 Perplexity gibt es nach oben **kein Fenster** – der Einbruch liegt bei sehr kleinen Werten, an denen der Graph zerfällt. **min_dist:** R² 0.91 (0), 0.92 (0.1), 0.93 (0.25), 0.92 (0.5), 0.94 (1); nur bei 1 steigt die Abstandstreue ferner Paare
 (0.65 statt 0.56) – `min_dist` ändert vor allem das Aussehen, kaum die Nachbarschaften. Epochen: 20 → 0.86, 50/100/200/500 → 0.88; Negative-Sample-Rate 1/5/15: R² 0.89/0.88/0.90.
 
-**Stabilität** (Seed 7, q = 2, sechs Initialisierungen; Procrustes zum spektralen Lauf): PCA-Start 0.00, zufällige Starts 0.02 / 0.02 / 0.26 / 0.05, R² 0.87–0.90; q = 3: 0.00–0.16; Rauschen 0.8: 0.01. Bei kleinem n und wenigen Epochen kann es mehr sein
-(150 Touren, 100 Epochen: bis 0.52). Zum Vergleich t-SNE (tsne-demo, zufällige Starts gegen den PCA-Start): q = 3 0.46–0.81.
+**Stabilität** (vier zufällige Starts je Datensatz, Median und Maximum der sechs paarweisen Procrustes-Abstände; feste Seeds 100000–100003, 300 Touren): q = 3 – UMAP Median 0.07 / 0.17 / 0.13 / 0.02 (Maximum ≤ 0.36),
+t-SNE 0.56 / 0.74 / 0.76 / 0.63 (Maximum bis 0.94) → UMAP klar stabiler. q = 2 – UMAP 0.32 / 0.08 / 0.17 / 0.02 (Maximum bis **0.67**), t-SNE 0.26 / 0.41 / 0.24 / 0.38 (Maximum ≤ 0.49) → gemischt, UMAP im Median meist besser, aber
+einzelne Starts weichen stark ab. Im Demo-Seed 7 lag der Abstand der zufälligen Starts zum spektralen Lauf lokal bei 0.02 / 0.02 / 0.26 / 0.05, auf der CI-Plattform bei 0.46 / 0.40 / 0.02 / 0.42 – die Optimierung ist chaotisch, die Zahlen
+hängen von Plattform (LAPACK/BLAS) und Datensatz ab. Bei kleinem n und wenigen Epochen kann es mehr sein (150 Touren, 100 Epochen: bis 0.52).
 
 **Out-of-sample** (letzte 20 % zurückgehalten, 6 feste Seeds): `transform` R² 0.88, 0.93, 0.88, 0.93, 0.92, 0.93; t-SNE-Näherung 0.79, 0.69, 0.74, 0.85, 0.75, 0.82; Verschiebung der Trainings-Touren beim Neu-Rechnen (UMAP)
 0.07, 0.03, 0.15, 0.04, 0.12, 0.03. Trainings-Touren als "neu" landen nahe ihrer eigenen Koordinate (maximale Abweichung ≈ 5 % der Einbettungsbreite). Im Demo-Seed 7 liegen beide fast gleich (UMAP 0.87, t-SNE 0.86) – die Streuung
@@ -79,6 +81,7 @@ Referenzimplementierung `umap-learn` liegt mit 4501 darüber. Die stichprobenbas
 - **Kein Fenster für n_neighbors nach oben:** eine "zu große Nachbarschaft" ließ sich auf diesen Daten nicht als Fehlerfall zeigen (R² steigt bis 60 leicht); die Demo behauptet es deshalb nicht.
 - **Konvergenz-Prüfung nur über einen Referenzlauf:** die Qualität entsteht in den letzten Epochen (die Lernrate fällt gegen 0), Zwischenstände sind kein guter Konvergenzindikator – bei wenigen Epochen rechnet die Demo deshalb einen Lauf mit 500
   Epochen daneben.
+- **Erste Fassung der Stabilitäts-Aussage war schief:** verglichen wurden UMAP bei q = 2 (Procrustes 0.00–0.26, ein Datensatz) mit t-SNE bei q = 3 (0.46–0.81) – ungleiche Fälle, und auf der CI-Plattform lag der UMAP-Wert bei 0.46. Sauber verglichen (gleiche Datensätze, paarweise, 4 Seeds) gilt der Vorteil nur bei q = 3.
 - **Nicht bitgleich zu umap-learn:** Jacobi-artige Aktualisierung; Kurve (a, b), Graph (1e-6) und Größenordnung der Einbettungsqualität stimmen überein (R² 0.88 gegen 0.91), aber Einzelpunkte nicht.
 - **Grenzen (Text):** Achsen und Abstände im Bild haben keine feste Bedeutung; Clustergrößen und Abstände zwischen Clustern sollten nicht interpretiert werden. Exaktes kNN und dichte spektrale Einbettung sind auf ≈ 600 Touren
   ausgelegt; größere Datensätze brauchen Nearest-Neighbor-Descent und sparse Eigenlöser, die hier nicht gebaut sind.
