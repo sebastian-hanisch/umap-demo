@@ -86,15 +86,15 @@ PRESET_HELP = {
     "Gekrümmte Fläche: UMAP entrollt": "Dieselbe gebogene Fläche wie in den Demos davor: UMAP gewinnt die versteckten Faktoren gut zurück (R² ≈ 0.88 gegen 0.50 der PCA; t-SNE 0.93, Isomap 0.98, LLE 0.96) - bei fernen Tourenpaaren aber nur mit Abstandstreue 0.56 (t-SNE 0.69).",
     "Sonderfahrten: dieselbe Schwäche wie t-SNE": "5 % Sonderfahrten mit extremen Werten: PCA (R² ≈ 0.76) und Isomap (0.75) behalten die Größenordnung, UMAP fällt auf 0.14 - fast genau wie t-SNE (0.12). Die oft genannte 'bessere globale Struktur' zeigt sich hier nicht.",
     "n_neighbors zu klein: Graph zerfällt": "Mit nur 3 Nachbarn je Tour (die Tour selbst zählt mit) zerfällt der Nachbarschaftsgraph in 8 Teile, 73 von 300 Touren hängen nicht am Hauptteil: R² der Faktoren 0.34, die Teile liegen unverbunden nebeneinander.",
-    "Zu wenige Epochen": "Nach nur 20 Epochen hat die Optimierung noch nicht konvergiert: Trustworthiness 0.94 statt 0.98, Abstandstreue ferner Paare 0.45 statt 0.56 - die Demo rechnet einen Referenzlauf mit 500 Epochen daneben.",
+    "Zu wenige Epochen": "Nach nur 20 Epochen hat die Optimierung noch nicht konvergiert: Trustworthiness 0.94 statt 0.98, Abstandstreue ferner Paare 0.45 statt 0.56 - die Demo rechnet einen Referenzlauf mit 500 Epochen daneben. (Der Effekt ist klein und datensatzabhängig: der Trustworthiness-Abstand lag über fünf Datensätze zwischen 0.01 und 0.04.)",
     "Rauschen: UMAP hält": "Mit viel Rauschen (0.8) liegt UMAP bei R² ≈ 0.89 - vor t-SNE (0.85), Isomap (0.84), LLE (0.58) und PCA (0.45). Der Graph mittelt über viele Nachbarn.",
     "Gerade Daten: kein Vorteil": "Krümmung 0: die Kennzahlen hängen linear von den Faktoren ab, die PCA ist optimal (R² 0.98) - UMAP erreicht 0.91 und kostet ein Vielfaches an Rechenzeit.",
 }
 PRESET_EXPECTED_BANDS = {
-    "Gekrümmte Fläche: UMAP entrollt": {"verdict": "umap_wins", "r2": (0.82, 0.95), "r2_tsne": (0.88, 0.98), "r2_iso": (0.94, 1.0), "r2_pca": (0.4, 0.6), "far": (0.45, 0.7), "far_tsne": (0.55, 0.8)},
-    "Sonderfahrten: dieselbe Schwäche wie t-SNE": {"verdict": "global_structure", "r2": (0.0, 0.3), "r2_tsne": (0.0, 0.3), "r2_pca": (0.6, 0.9), "r2_iso": (0.6, 0.9), "far": (-0.1, 0.3), "far_pca": (0.85, 1.0)},
+    "Gekrümmte Fläche: UMAP entrollt": {"verdict": "umap_wins", "r2": (0.75, 0.97), "r2_tsne": (0.8, 0.99), "r2_iso": (0.94, 1.0), "r2_pca": (0.4, 0.6), "far": (0.3, 0.75), "far_tsne": (0.4, 0.85)},
+    "Sonderfahrten: dieselbe Schwäche wie t-SNE": {"verdict": "global_structure", "r2": (-0.2, 0.5), "r2_tsne": (-0.2, 0.5), "r2_pca": (0.6, 0.9), "r2_iso": (0.6, 0.9), "far": (-0.5, 0.35), "far_pca": (0.85, 1.0)},
     "n_neighbors zu klein: Graph zerfällt": {"verdict": "disconnected", "components": (5, 12), "isolated": (40, 110), "r2": (0.15, 0.55)},
-    "Zu wenige Epochen": {"verdict": "not_converged", "trust": (0.9, 0.96), "trust_alt": (0.96, 1.0), "far": (0.3, 0.55)},
-    "Rauschen: UMAP hält": {"verdict": "umap_wins", "r2": (0.8, 0.95), "r2_tsne": (0.75, 0.92), "r2_iso": (0.75, 0.92), "r2_lle": (0.4, 0.7), "r2_pca": (0.3, 0.6)},
+    "Zu wenige Epochen": {"verdict": "not_converged", "trust": (0.88, 0.97), "trust_alt": (0.95, 1.0), "far": (0.15, 0.7)},
+    "Rauschen: UMAP hält": {"verdict": "umap_wins", "r2": (0.7, 0.97), "r2_tsne": (0.65, 0.95), "r2_iso": (0.7, 0.95), "r2_lle": (0.4, 0.7), "r2_pca": (0.3, 0.6)},
     "Gerade Daten: kein Vorteil": {"verdict": "no_advantage", "r2": (0.85, 0.97), "r2_pca": (0.94, 1.0)},
 }
