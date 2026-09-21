@@ -105,3 +105,11 @@ def test_every_figure_of_the_visualisation_module_is_axis_locked():
     source = (ROOT / "umap_visualization.py").read_text(encoding="utf-8")
     assert len(re.findall(r"return lock_axes\(fig\)", source)) == len(re.findall(r"^def build_", source, flags=re.M)) == 11
     assert len(re.findall(r"^\s+return fig$", source, flags=re.M)) == 1
+
+
+def test_play_runs_through_all_frames_without_duplicate_chart_keys():
+    """Beim Abspielen entstehen in einem Lauf mehrere Diagramme mit demselben Namen - die Schlüssel tragen deshalb den Schritt (Regression: StreamlitDuplicateElementKey bei mehr als einem Bild)."""
+    at = _run()
+    [b for b in at.button if b.label == "▶️ Abspielen"][0].click()
+    at.run()
+    assert not at.exception, [e.value for e in at.exception]

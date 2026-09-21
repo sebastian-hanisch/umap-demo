@@ -250,9 +250,9 @@ def _render(current_step, epoch=None):
         with view_slot.container():
             c1, c2 = st.columns([2, 3])
             c1.markdown(f"**Einbettung nach Epoche {ep}**")
-            c1.plotly_chart(build_embedding(model.snapshots[ep], z_color, "Koordinate 1", "Koordinate 2"), width="stretch", key="umap_snapshot")
+            c1.plotly_chart(build_embedding(model.snapshots[ep], z_color, "Koordinate 1", "Koordinate 2"), width="stretch", key=f"umap_snapshot_{ep}")
             c2.markdown("**Optimierung**")
-            c2.plotly_chart(build_optimization(model.forces, dict(r2_points), model.snapshot_loss, marker=ep), width="stretch", key="umap_optimization")
+            c2.plotly_chart(build_optimization(model.forces, dict(r2_points), model.snapshot_loss, marker=ep), width="stretch", key=f"umap_optimization_{ep}")
     else:
         with view_slot.container():
             c1, c2 = st.columns(2)
