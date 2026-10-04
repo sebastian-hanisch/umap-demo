@@ -11,13 +11,13 @@ eingefroren), erzeugt aus wenigen versteckten Faktoren – dieselbe gekrümmte F
 plus eine **lokale Kräfte-Optimierung** (Anziehung entlang der Kanten, Abstoßung von Zufallspunkten). Es soll t-SNEs Schwächen beheben – die Demo **misst**, welche dieser Versprechen sich auf diesen Daten halten:
 ```
 pca-demo → isomap-demo | lle-demo | tsne-demo → umap-demo    (Konvergenz: Nachbarschaftsgraph + Kräfte-Optimierung)
-umap-demo → PaCMAP | Autoencoder   (weitere Stücke, noch nicht gebaut)
+umap-demo → pacmap-demo | autoencoder-demo   (weitere Stücke, beide gebaut)
 ```
 
 | Versprechen gegenüber t-SNE | Ergebnis (300 Touren; Out-of-sample und Stabilität über feste Seeds, sonst Seed 7) |
 |---|---|
 | Neue Touren einbetten | ✅ `transform`: R² 0.88–0.93 gegen 0.69–0.85 bei der t-SNE-Näherung; Trainings-Touren verschieben sich beim Neu-Rechnen nur um Procrustes 0.03–0.15 |
-| Stabilität (Start egal) | ✅ bei q = 3 (mittlere paarweise Abweichung zufälliger Starts, 4 feste Seeds): UMAP 0.02–0.17, t-SNE 0.56–0.76. Bei q = 2 gemischt: UMAP 0.02–0.32, t-SNE 0.24–0.41; einzelne UMAP-Starts weichen stark ab |
+| Stabilität (Start egal) | ✅ bei q = 3 (Median der paarweisen Abweichungen zufälliger Starts, 4 feste Seeds): UMAP 0.02–0.17, t-SNE 0.56–0.76. Bei q = 2 gemischt: UMAP 0.02–0.32, t-SNE 0.24–0.41; einzelne UMAP-Starts weichen stark ab |
 | Geschwindigkeit | ✅ bei großem n (n = 600: 1.3 s gegen 4.9 s); bei n = 100–200 ist t-SNE schneller |
 | Globale Struktur | ❌ Abstandstreue ferner Paare 0.56 gegen 0.69 (t-SNE) – nicht besser |
 | Sonderfahrten / Extreme | ❌ 5 %: R² 0.14 gegen 0.12 (t-SNE), PCA 0.76 – dieselbe Schwäche |
@@ -126,6 +126,4 @@ pytest tests/ -v
 
 ---
 
-Teil des [Operations-Research-Demo-Portfolios](https://sebastianhanisch.net/demos.html) von
-[Sebastian Hanisch](https://sebastianhanisch.net) – Operations Research und Machine Learning.
-Interesse an einer maßgeschneiderten Lösung? [Kontakt aufnehmen](https://sebastianhanisch.net/kontakt.html).
+Diese Demo ist Teil des Portfolios von [Sebastian Hanisch](https://sebastianhanisch.net) – Operations Research und Machine Learning ([Über mich](https://sebastianhanisch.net/ueber-mich.html)). Mehr zur Reihe: [Dimensionsreduktion: von PCA bis Autoencoder](https://sebastianhanisch.net/konzepte-dimensionsreduktion.html).
