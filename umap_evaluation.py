@@ -226,12 +226,14 @@ def out_of_sample(dataset, settings, fraction=C.HOLDOUT_FRACTION):
     umap_train = run_umap(dataset.X[train], settings)
     y_umap = transform(umap_train, dataset.X[test])
     beta, *_ = np.linalg.lstsq(_quad_features(umap_train.embedding), dataset.z[train], rcond=None)
-    r2_umap = float(1 - (z_test - _quad_features(y_umap) @ beta).var(0).sum() / z_test.var(0).sum())
+    resid = z_test - _quad_features(y_umap) @ beta                                                     # nicht zentrieren: ein konstanter Versatz der Vorhersage zählt als Fehler
+    r2_umap = float(1 - (resid ** 2).sum() / ((z_test - z_test.mean(0)) ** 2).sum())
     umap_full = run_umap(dataset.X, settings)
     tsne_train = fit_tsne(dataset.X[train], C.TSNE_PERPLEXITY, C.TSNE_N_ITER)
     y_tsne = embed_new_naive(tsne_train, dataset.X[test], 10)
     beta_t, *_ = np.linalg.lstsq(_quad_features(tsne_train.embedding), dataset.z[train], rcond=None)
-    r2_tsne = float(1 - (z_test - _quad_features(y_tsne) @ beta_t).var(0).sum() / z_test.var(0).sum())
+    resid_t = z_test - _quad_features(y_tsne) @ beta_t
+    r2_tsne = float(1 - (resid_t ** 2).sum() / ((z_test - z_test.mean(0)) ** 2).sum())
     tsne_full = fit_tsne(dataset.X, C.TSNE_PERPLEXITY, C.TSNE_N_ITER)
     return {"train": train, "test": test, "model": umap_train, "tsne_train": tsne_train.embedding, "y_umap": y_umap, "y_tsne": y_tsne, "r2_umap": r2_umap, "r2_tsne": r2_tsne,
             "r2_train": r2_quadratic(umap_train.embedding, dataset.z[train]),

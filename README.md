@@ -16,7 +16,7 @@ umap-demo → pacmap-demo | autoencoder-demo   (weitere Stücke, beide gebaut)
 
 | Versprechen gegenüber t-SNE | Ergebnis (300 Touren; Out-of-sample und Stabilität über feste Seeds, sonst Seed 7) |
 |---|---|
-| Neue Touren einbetten | ✅ `transform`: R² 0.88–0.93 gegen 0.69–0.85 bei der t-SNE-Näherung; Trainings-Touren verschieben sich beim Neu-Rechnen nur um Procrustes 0.03–0.15 |
+| Neue Touren einbetten | ✅ `transform`: R² 0.88–0.93 gegen 0.67–0.85 bei der t-SNE-Näherung; Trainings-Touren verschieben sich beim Neu-Rechnen nur um Procrustes 0.03–0.15 |
 | Stabilität (Start egal) | ✅ bei q = 3 (Median der paarweisen Abweichungen zufälliger Starts, 4 feste Seeds): UMAP 0.02–0.17, t-SNE 0.56–0.76. Bei q = 2 gemischt: UMAP 0.02–0.32, t-SNE 0.24–0.41; einzelne UMAP-Starts weichen stark ab |
 | Geschwindigkeit | ✅ bei großem n (n = 600: 1.3 s gegen 4.9 s); bei n = 100–200 ist t-SNE schneller |
 | Globale Struktur | ❌ Abstandstreue ferner Paare 0.56 gegen 0.69 (t-SNE) – nicht besser |
@@ -54,8 +54,8 @@ t-SNE 0.56 / 0.74 / 0.76 / 0.63 (Maximum bis 0.94) → UMAP klar stabiler. q = 2
 einzelne Starts weichen stark ab. Im Demo-Seed 7 lag der Abstand der zufälligen Starts zum spektralen Lauf lokal bei 0.02 / 0.02 / 0.26 / 0.05, auf der CI-Plattform bei 0.46 / 0.40 / 0.02 / 0.42 – die Optimierung ist chaotisch, die Zahlen
 hängen von Plattform (LAPACK/BLAS) und Datensatz ab. Bei kleinem n und wenigen Epochen kann es mehr sein (150 Touren, 100 Epochen: bis 0.52).
 
-**Out-of-sample** (letzte 20 % zurückgehalten, 6 feste Seeds): `transform` R² 0.88, 0.93, 0.88, 0.93, 0.92, 0.93; t-SNE-Näherung 0.79, 0.69, 0.74, 0.85, 0.75, 0.82; Verschiebung der Trainings-Touren beim Neu-Rechnen (UMAP)
-0.07, 0.03, 0.15, 0.04, 0.12, 0.03. Trainings-Touren als "neu" landen nahe ihrer eigenen Koordinate (maximale Abweichung ≈ 5 % der Einbettungsbreite). Im Demo-Seed 7 liegen beide fast gleich (UMAP 0.87, t-SNE 0.86) – die Streuung
+**Out-of-sample** (letzte 20 % zurückgehalten, 6 feste Seeds): `transform` R² 0.88, 0.93, 0.88, 0.93, 0.92, 0.93; t-SNE-Näherung 0.77, 0.67, 0.72, 0.85, 0.75, 0.82; Verschiebung der Trainings-Touren beim Neu-Rechnen (UMAP)
+0.07, 0.03, 0.15, 0.04, 0.12, 0.03. Trainings-Touren als "neu" landen nahe ihrer eigenen Koordinate (maximale Abweichung ≈ 5 % der Einbettungsbreite). Im Demo-Seed 7 liegen beide fast gleich (UMAP 0.87, t-SNE 0.85) – die Streuung
 über Seeds ist groß.
 
 **Rechenzeit** (lokale Messung, 500 Epochen bzw. 500 t-SNE-Iterationen, ein Lauf je n): n = 100: UMAP 0.32 s, t-SNE 0.08 s; n = 200: 0.49 s, 0.24 s; n = 400: **0.88 s, 2.3 s**; n = 600: **1.3 s, 4.9 s**. UMAP braucht zusätzlich den Graphen und eine
